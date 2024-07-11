@@ -1,0 +1,6 @@
+version: 1
+apps:
+  - appDirPath: ./spring-cron/
+    appID: spring-cron
+    appPort: 9093
+    command: ["java", "-jar", "target/spring-cron-0.0.1-SNAPSHOT.jar"]

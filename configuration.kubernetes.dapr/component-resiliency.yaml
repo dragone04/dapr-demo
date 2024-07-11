@@ -1,0 +1,48 @@
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: resiliency
+  namespace: development
+scopes:
+- spring-cron
+- spring-producer
+- spring-consumer
+- spring-store
+spec:
+  policies:
+
+    timeouts:
+      general: 3s
+      important: 5s
+      largeResponse: 6s
+
+    retries:
+      DefaultRetryPolicy:
+        policy: constant
+        duration: 3s
+        maxRetries: 3
+
+      fastRetries:
+        policy: constant
+        duration: 1s
+        maxRetries: 3
+
+      retryForever:
+        policy: exponential
+        maxInterval: 10s
+        maxRetries: -1
+
+  targets:
+    apps:
+      spring-cron:
+        retry: fastRetries
+        timeout: general
+      spring-producer:
+        retry: fastRetries
+        timeout: general
+      spring-consumer:
+        retry: retryForever
+        timeout: important
+      spring-store:
+        retry: retryForever
+        timeout: important

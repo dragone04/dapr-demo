@@ -1,0 +1,15 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: postgresbinding
+  namespace: development
+spec:
+  type: bindings.postgresql
+  version: v1
+  metadata:
+  - name: connectionString
+    value: "postgres://postgres:password@pg-minikube-postgresql.default.svc.cluster.local:5432/dapr?sslmode=disable"
+  - name: direction
+    value: output
+scopes:
+- spring-store

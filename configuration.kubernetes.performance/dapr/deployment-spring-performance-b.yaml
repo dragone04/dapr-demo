@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-performance-b
+  namespace: development-performance-dapr
+  labels:
+    app: spring-performance-b
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-performance-b
+  template:
+    metadata:
+      labels:
+        app: spring-performance-b
+      annotations:
+        dapr.io/enabled: "True"
+        dapr.io/app-id: "spring-performance-b"
+        dapr.io/app-port: "9081"
+        dapr.io/enable-api-logging: "True"
+        dapr.io/sidecar-cpu-request: "0.2"
+        dapr.io/sidecar-memory-request: "250Mi"
+        dapr.io/sidecar-cpu-limit: "0.5"
+        dapr.io/sidecar-memory-limit: "1000Mi"
+        dapr.io/env: "GOMEMLIMIT=900MiB"
+        dapr.io/config: "tracing"
+        dapr.io/log-as-json: "True"
+        dapr.io/app-protocol: "http"
+        dapr.io/log-level: "debug"
+        dapr.io/enable-app-health-check: "True"
+        dapr.io/app-health-check-path: "/api/health"
+        dapr.io/app-health-probe-interval: "30"
+        dapr.io/app-health-probe-timeout: "200"
+        dapr.io/app-health-threshold: "2"
+    spec:
+      containers:
+        - name: spring-performance-b
+          image: docker.io/library/spring-performance-b:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9081
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 9081
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 9081
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            successThreshold: 1
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: 256Mi
+            limits:
+              cpu: "0.5"
+              memory: 512Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-performance-b
+  namespace: development-performance-dapr
+spec:
+  ports:
+    - port: 9081
+      targetPort: 9081
+      protocol: TCP
+  selector:
+    app: spring-performance-b
+  sessionAffinity: None
+  type: NodePort

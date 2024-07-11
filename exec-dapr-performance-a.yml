@@ -1,0 +1,6 @@
+version: 1
+apps:
+  - appDirPath: ./spring-performance-a/
+    appID: spring-performance-a
+    appPort: 9080
+    command: ["java", "-jar", "target/spring-performance-a-0.0.1-SNAPSHOT.jar"]

@@ -1,0 +1,6 @@
+version: 1
+apps:
+  - appDirPath: ./spring-store/
+    appID: spring-store
+    appPort: 9092
+    command: ["java", "-jar", "target/spring-store-0.0.1-SNAPSHOT.jar"]
