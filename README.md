@@ -29,6 +29,8 @@
 
 ## configure local secret store
 
+    creare in your $HOME/.dapr a file called secret.yaml. If you don't enable hot reload, you need to restart your services to get new configurations.
+
     apiVersion: dapr.io/v1alpha1
     kind: Component
     metadata:
@@ -50,6 +52,8 @@
     access it http://localhost:9411/
 
 ## configure dapr to connect to zipkin
+
+    creare in your $HOME/.dapr a file called configuration.yaml. If you don't enable hot reload, you need to restart your services to get new configurations.
 
     apiVersion: dapr.io/v1alpha1
     kind: Configuration
