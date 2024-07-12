@@ -1,5 +1,14 @@
 # DAPR
 
+    In this demo you can run a pool of microservices, testing some dapr building blocks like:
+        - service-to-service communication
+        - secret store
+        - database bindings
+        - pub-sub
+        - state store
+        - cron
+        - configuration and resiliency
+
 ## install dapr with dev features
 
 ### local machine
