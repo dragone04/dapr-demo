@@ -8,6 +8,10 @@
         - state store
         - cron
         - configuration and resiliency
+  
+    There are 2 demo project:
+        1. lunch spring-performance-a and spring-performance-b locally or in a minikube instance
+        2. lunch spring-cron, spring-consumer, spring-producer and spring-store in a minikube instance
 
 ## install dapr with dev features
 
@@ -96,8 +100,9 @@
 
 ## Kubernetes
 
-### pre requisites, give access roles to read secrets
+### pre requisites, create a dedicated namespace and give access roles to read secrets
 
+    kubectl create namespace development
     kubectl create role access-secrets --verb=get,list,watch,update,create --resource=secrets -n development
     kubectl create rolebinding --role=access-secrets default-to-secrets --serviceaccount=development:default -n development
 
