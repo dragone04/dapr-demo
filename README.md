@@ -108,7 +108,7 @@
 
 ### dapr
 
-    dapr init -k --dev (install dapr with zipkins and redis)
+    dapr init -k --dev (install dapr in dev mode, with zipkins and redis)
     dapr components -k -A (list all the components installed)
     dapr dashboard -k (open dapr dashboard related to kubernetes instance)
 
@@ -126,8 +126,7 @@
 ### deploy postgres and secret
 
     helm install pg-minikube --set auth.postgresPassword=password bitnami/postgresql
-    kubectl create secret generic secret --from-literal=secret=verysecret
-    kubectl create namespace development
+    kubectl apply -f secret.yaml -n development
     kubectl apply -f component-config.yaml -n development
     kubectl apply -f component-postgresql-bindings.yaml -n development
 
