@@ -47,7 +47,7 @@
 
 ## run service
 
-    dapr run -f /Users/vincenzociaralli/work/bitbucket/test_env/dapr/messaging/dapr.yaml
+    dapr run -f /Users/<<user>>/work/bitbucket/test_env/dapr/messaging/dapr.yaml
 
 ## install redis
 
@@ -68,7 +68,7 @@
     - name: enableTLS
         value: "false"
 
-## publish message
+## publish message through dapr
 
 curl -X POST http://localhost:3500/v1.0/publish/order-pub-sub/orders -H "Content-Type: application/cloudevents+json" -d '{"specversion" : "1.0", "type" : "com.dapr.cloudevent.sent", "source" : "testcloudeventspubsub", "subject" : "Cloud Events Test", "id" : "someCloudEventId", "time" : "2021-08-02T09:00:00Z", "datacontenttype" : "application/cloudevents+json", "data" : {"orderId": "100"}}'
 
