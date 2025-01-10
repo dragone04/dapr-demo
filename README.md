@@ -31,6 +31,8 @@
 
     dapr run --app-id dapr-app --dapr-http-port 3500
 
+    dapr run -f <<name_of_the_exec_yaml>>
+
 ## configure local secret store
 
     creare in your $HOME/.dapr a file called secret.yaml. If you don't enable hot reload, you need to restart your services to get new configurations.
