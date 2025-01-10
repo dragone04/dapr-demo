@@ -27,11 +27,10 @@
 
     cd $HOME/.dapr
 
-## run a dummy dapr service on local machine to enable sidecar connetion
+## run a dummy dapr service on local machine to enable sidecar connetion and run all the services using dapr run script
 
     dapr run --app-id dapr-app --dapr-http-port 3500
-
-    dapr run -f <<name_of_the_exec_yaml>>
+    dapr run -f exec-dapr-performance.yaml
 
 ## configure local secret store
 
