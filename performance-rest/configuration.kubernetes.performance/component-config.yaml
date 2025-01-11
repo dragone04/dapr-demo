@@ -1,0 +1,19 @@
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: tracing
+  namespace: development
+spec:
+
+  mtls:
+    enabled: false
+
+  tracing:
+    samplingRate: "0.1"
+    zipkin:
+      endpointAddress: "http://dapr-dev-zipkin.default.svc.cluster.local:9411/api/v2/spans"
+  
+  secrets:
+    scopes:
+      - storeName: localsecretstore
+        defaultAccess: allow

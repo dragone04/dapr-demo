@@ -67,7 +67,7 @@
     namespace: default
     spec:
     tracing:
-        samplingRate: "1"
+        samplingRate: "0.1"
         zipkin:
         endpointAddress: "http://localhost:9411/api/v2/spans"
 
@@ -148,3 +148,35 @@
     docker build -t spring-store:0.1.0 -f ./Dockerfile .
     kubectl create -f deployment-spring-store.yaml -n development
     minikube service spring-store --namespace=development --url
+
+## spring performance
+
+    cd configuration.kubernetes.performance
+
+    kubectl apply -f component-config.yaml -n development
+
+    kubectl apply -f component-resiliency.yaml -n development
+
+    eval $(minikube -p minikube docker-env)
+
+### build service a
+
+    docker build -t spring-performance-a:0.1.0 -f ./Dockerfile .
+
+    kubectl apply -f deployment-spring-performance-a.yaml
+
+### build service b
+
+    docker build -t spring-performance-b:0.1.0 -f ./Dockerfile .
+
+    kubectl apply -f deployment-spring-performance-b.yaml
+
+### build spring boot admin
+
+    docker build -t spring-boot-admin:0.1.0 -f ./Dockerfile .
+
+    kubectl apply -f deployment-spring-boot-admin.yaml
+    
+### test service
+
+    minikube service spring-performance-a --namespace=development --url
