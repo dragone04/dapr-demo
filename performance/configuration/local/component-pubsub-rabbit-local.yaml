@@ -1,0 +1,27 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: messagepubsub
+spec:
+  type: pubsub.rabbitmq
+  version: v1
+  metadata:
+    - name: hostname
+      value: localhost
+    - name: username
+      value: guest
+    - name: password
+      value: guest
+    - name: reconnectWait
+      value: 1 # reconnect will be performed in 1 sec after failure
+    - name: deletedWhenUnused
+      value: false
+    - name: requeueInFailure
+      value: true
+    - name: enableDeadLetter
+      value: true
+    - name: queueType
+      value: quorum
+scopes:
+  - spring-performance-a
+  - spring-performance-b

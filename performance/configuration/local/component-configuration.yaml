@@ -1,0 +1,17 @@
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: tracing
+spec:
+  mtls:
+    enabled: false
+  tracing:
+    samplingRate: "1"    
+    expandParams: true
+    includeBody: true
+    zipkin:
+      endpointAddress: "http://localhost:9411/api/v2/spans"
+  secrets:
+    scopes:
+      - storeName: localsecretstore
+        defaultAccess: allow

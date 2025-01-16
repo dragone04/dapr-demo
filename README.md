@@ -19,10 +19,6 @@
 
     dapr init
 
-### kubernetes
-
-    dapr init -k --dev
-
 ## access dapr local configuration
 
     cd $HOME/.dapr
@@ -153,6 +149,8 @@
 
     cd configuration.kubernetes.performance
 
+    kubectl apply -f namespace-development.yaml
+
     kubectl apply -f component-config.yaml -n development
 
     kubectl apply -f component-resiliency.yaml -n development
@@ -161,17 +159,23 @@
 
 ### build service a
 
+    eval $(minikube -p minikube docker-env)
+
     docker build -t spring-performance-a:0.1.0 -f ./Dockerfile .
 
     kubectl apply -f deployment-spring-performance-a.yaml
 
 ### build service b
 
+    eval $(minikube -p minikube docker-env)
+
     docker build -t spring-performance-b:0.1.0 -f ./Dockerfile .
 
     kubectl apply -f deployment-spring-performance-b.yaml
 
 ### build spring boot admin
+
+    eval $(minikube -p minikube docker-env)
 
     docker build -t spring-boot-admin:0.1.0 -f ./Dockerfile .
 
