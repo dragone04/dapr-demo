@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 
 @RestController
 public class RabbitScheduler {
@@ -36,14 +39,22 @@ public class RabbitScheduler {
         Random random = new Random();
         int randomNumber = random.nextInt(100) + 1;
 
+        String traceparent = "00-" + UUID.randomUUID().toString().replace("-", "") + "-0000000000000000-01";
+        String tracestate = UUID.randomUUID().toString().replace("-", "");
+
+        Map<String, String> headers = Map.of(
+                "traceparent", Objects.toString(traceparent, ""),
+                "tracestate", Objects.toString(tracestate, "")
+        );
+
         try (DaprClient client = (new DaprClientBuilder()).build()) {
 
-            response = client.invokeMethod(EXTERNAL_HTTP_ENDPOINT, EXTERNAL_HTTP_METHOD + "/" + randomNumber, null, HttpExtension.GET, null, ExternalServiceObject.class).block();
+            response = client.invokeMethod(EXTERNAL_HTTP_ENDPOINT, EXTERNAL_HTTP_METHOD + "/" + randomNumber, headers, HttpExtension.GET, null, ExternalServiceObject.class).block();
             LOGGER.info("Response: {}", response);
 
             if (response != null) {
                 Message msg = new Message(response.getId(), response.getTitle());
-                springProducerResponse = client.invokeMethod(SERVICE_APP_ID, SERVICE_METHOD, msg, HttpExtension.POST, null, Message.class).block();
+                springProducerResponse = client.invokeMethod(SERVICE_APP_ID, SERVICE_METHOD, msg, HttpExtension.POST, headers, Message.class).block();
             }
         } catch (Exception e) {
             LOGGER.error("Error serializing message", e);
