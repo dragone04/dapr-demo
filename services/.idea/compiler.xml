@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="spring-service-mongo" />
+        <module name="spring-performance-c" />
+        <module name="spring-service-producer" />
+        <module name="spring-performance-a" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spring-boot-admin" target="17" />
+      <module name="spring-performance-b" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="spring-boot-admin" options="-parameters" />
+      <module name="spring-performance-a" options="-parameters" />
+      <module name="spring-performance-b" options="-parameters" />
+      <module name="spring-performance-c" options="-parameters" />
+      <module name="spring-service-mongo" options="-parameters" />
+      <module name="spring-service-producer" options="-parameters" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,11 @@
+apiVersion: dapr.io/v1alpha1
+kind: HTTPEndpoint
+metadata:
+  name: "external-http-endpoint"
+spec:
+  baseUrl: https://jsonplaceholder.typicode.com
+  headers:
+  - name: "Accept-Language"
+    value: "en-US"
+scope:
+ - spring-service-scheduler

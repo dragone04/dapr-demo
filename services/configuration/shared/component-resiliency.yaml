@@ -1,0 +1,51 @@
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: resiliency
+  namespace: development
+spec:
+  policies:
+
+    timeouts:
+      general: 3s
+      important: 5s
+      largeResponse: 6s
+
+    retries:
+      DefaultRetryPolicy:
+        policy: constant
+        duration: 1s
+        maxRetries: 3
+
+      fastRetries:
+        policy: constant
+        duration: 10ms
+        maxRetries: 3
+
+      retryForever:
+        policy: exponential
+        maxInterval: 10s
+        maxRetries: -1
+
+    circuitBreakers:
+      serviceToServiceCB:
+        maxRequests: 100
+        interval: 8s
+        timeout: 45s
+        trip: consecutiveFailures > 8
+
+  targets:
+  
+    apps:
+      spring-service-producer:
+        timeout: general
+        retry: DefaultRetryPolicy
+        circuitBreaker: serviceToServiceCB
+
+      spring-service-consumer:
+        timeout: important
+        retry: DefaultRetryPolicy
+        circuitBreaker: serviceToServiceCB
+scopes:
+  - spring-service-producer
+  - spring-service-consumer

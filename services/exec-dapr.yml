@@ -1,0 +1,22 @@
+version: 1
+apps:
+  - appDirPath: ./spring-boot-admin/
+    appID: spring-boot-admin
+    appPort: 9082
+    command: ["java", "-jar", "target/spring-boot-admin-0.0.1-SNAPSHOT.jar"]
+  - appDirPath: ./spring-service-scheduler/
+    appID: spring-service-scheduler
+    appPort: 9084
+    command: ["java", "-jar", "target/spring-service-scheduler-0.0.1-SNAPSHOT.jar"]
+  - appDirPath: ./spring-service-producer/
+    appID: spring-service-producer
+    appPort: 9080
+    command: ["java", "-jar", "target/spring-service-producer-0.0.1-SNAPSHOT.jar"]
+  - appDirPath: ./spring-service-consumer/
+    appID: spring-service-consumer
+    appPort: 9081
+    command: ["java", "-jar", "target/spring-service-consumer-0.0.1-SNAPSHOT.jar"]
+  - appDirPath: ./spring-service-mongo/
+    appID: spring-service-mongo
+    appPort: 9083
+    command: ["java", "-jar", "target/spring-service-mongo-0.0.1-SNAPSHOT.jar"]

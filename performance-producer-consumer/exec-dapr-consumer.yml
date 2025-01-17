@@ -1,6 +1,0 @@
-version: 1
-apps:
-  - appDirPath: ./spring-consumer/
-    appID: spring-consumer
-    appPort: 9091
-    command: ["java", "-jar", "target/spring-consumer-0.0.1-SNAPSHOT.jar"]
