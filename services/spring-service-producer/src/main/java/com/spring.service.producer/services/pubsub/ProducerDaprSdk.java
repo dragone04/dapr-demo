@@ -9,7 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class ProducerDaprSdk {
@@ -21,14 +25,22 @@ public class ProducerDaprSdk {
 
     @PostMapping(path = "/produceDaprSdk", consumes = MediaType.ALL_VALUE)
     public ResponseEntity<Message> produceDaprSdk(
+            @RequestHeader(value = "traceparent", required = false) String traceparent,
+            @RequestHeader(value = "tracestate", required = false) String tracestate,
             @RequestBody(required = false) Message message
     ) {
+
+        Map<String, String> headers = Map.of(
+                "traceparent", Objects.toString(traceparent, ""),
+                "tracestate", Objects.toString(tracestate, "")
+        );
 
         try (DaprClient client = new DaprClientBuilder().build()) {
             client.publishEvent(
                     PUBSUB_NAME,
                     TOPIC_NAME,
-                    message
+                    message,
+                    headers
             ).block();
 
         } catch (Exception e) {

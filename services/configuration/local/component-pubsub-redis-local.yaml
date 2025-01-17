@@ -11,5 +11,5 @@ spec:
       - name: redisPassword
         value: ""
 scopes:
-  - spring-performance-a
-  - spring-performance-b
+  - spring-service-producer
+  - spring-service-consumer
