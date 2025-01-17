@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.dapr.client.DaprClient;
@@ -15,7 +16,6 @@ import io.dapr.client.DaprClientBuilder;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.UUID;
 
 @RestController
 public class RestScheduler {
@@ -29,16 +29,16 @@ public class RestScheduler {
     private static final String EXTERNAL_HTTP_METHOD = "todos";
 
     @PostMapping(path = "/restScheduler")
-    public ResponseEntity<Message> restScheduler() {
+    public ResponseEntity<Message> restScheduler(
+            @RequestHeader(value = "traceparent", required = false) String traceparent,
+            @RequestHeader(value = "tracestate", required = false) String tracestate
+    ) {
 
         ExternalServiceObject response;
         Message springProducerResponse = new Message();
 
         Random random = new Random();
         int randomNumber = random.nextInt(100) + 1;
-
-        String traceparent = "00-" + UUID.randomUUID().toString().replace("-", "") + "-0000000000000000-01";
-        String tracestate = UUID.randomUUID().toString().replace("-", "");
 
         Map<String, String> headers = Map.of(
                 "traceparent", Objects.toString(traceparent, ""),
@@ -47,8 +47,7 @@ public class RestScheduler {
 
         try (DaprClient client = (new DaprClientBuilder()).build()) {
 
-            response = client.invokeMethod(EXTERNAL_HTTP_ENDPOINT, EXTERNAL_HTTP_METHOD + "/" + randomNumber, null, HttpExtension.GET, headers, ExternalServiceObject.class).block();
-            LOGGER.info("Response: {}", response);
+            response = client.invokeMethod(EXTERNAL_HTTP_ENDPOINT, EXTERNAL_HTTP_METHOD + "/" + randomNumber, HttpExtension.GET, headers, ExternalServiceObject.class).block();
 
             if (response != null) {
                 Message msg = new Message(response.getId(), response.getTitle());
@@ -58,6 +57,7 @@ public class RestScheduler {
             LOGGER.error("Error serializing message", e);
         }
 
+        LOGGER.info("response: {}", springProducerResponse);
         return ResponseEntity.ok(springProducerResponse);
 
     }

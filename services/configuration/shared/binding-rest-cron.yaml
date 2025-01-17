@@ -10,5 +10,5 @@ spec:
     value: "@every 10s"
   - name: direction
     value: "input"
-scope:
+scopes:
  - spring-service-scheduler

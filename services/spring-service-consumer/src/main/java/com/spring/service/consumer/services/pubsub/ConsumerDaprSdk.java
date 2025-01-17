@@ -11,10 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class ConsumerDaprSdk {
@@ -30,36 +32,39 @@ public class ConsumerDaprSdk {
     @Topic(name = TOPIC_NAME, pubsubName = PUBSUB_NAME)
     @PostMapping(path = "/consumeDaprSdk", consumes = MediaType.ALL_VALUE)
     public Mono<Void> consumeDaprSdk(
+            @RequestHeader(value = "traceparent", required = false) String traceparent,
+            @RequestHeader(value = "tracestate", required = false) String tracestate,
             @RequestBody(required = false) CloudEvent<Message> cloudEvent
     ) {
 
         return Mono.fromRunnable(() -> {
             try {
 
-                LOGGER.info("Received traceparent: {}", cloudEvent.getTraceParent());
-                LOGGER.info("Received tracestate: {}", cloudEvent.getTraceState());
-                LOGGER.info("Received pubSubName: {}", cloudEvent.getPubsubName());
-                LOGGER.info("Received id: {}", cloudEvent.getId());
-                LOGGER.info("Received topic: {}", cloudEvent.getTopic());
-                LOGGER.info("Received message getData: {}", cloudEvent.getData());
+                LOGGER.info("traceparent: {}", traceparent);
+                LOGGER.info("tracestate: {}", tracestate);
+
+                LOGGER.info("cloudEvent@traceparent: {}", cloudEvent.getTraceParent());
+                LOGGER.info("cloudEvent@tracestate: {}", cloudEvent.getTraceState());
 
                 Message response;
-                Map<String, String> headers = Map.of("traceparent", cloudEvent.getTraceParent(), "tracestate", cloudEvent.getTraceState());
+                Map<String, String> headers = Map.of(
+                        "traceparent", Objects.toString(traceparent, ""),
+                        "tracestate", Objects.toString(tracestate, "")
+                );
 
                 try (DaprClient client = (new DaprClientBuilder()).build()) {
 
                     response = client.invokeMethod(SERVICE_APP_ID, SERVICE_METHOD, cloudEvent.getData(), HttpExtension.POST, headers, Message.class).block();
-                    LOGGER.info("Response: {}", response);
+                    LOGGER.info("response: {}", response);
 
                 } catch (Exception e) {
-                    LOGGER.error("Error serializing message", e);
+                    e.printStackTrace();
                 }
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
-
 
     }
 

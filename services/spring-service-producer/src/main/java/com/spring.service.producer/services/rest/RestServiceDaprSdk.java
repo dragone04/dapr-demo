@@ -32,7 +32,6 @@ public class RestServiceDaprSdk {
             @RequestBody(required = false) Message message
     ) {
 
-        LOGGER.info("Received message: {}", message);
         LOGGER.info("traceparent: {}", traceparent);
         LOGGER.info("tracestate: {}", tracestate);
 
@@ -45,7 +44,7 @@ public class RestServiceDaprSdk {
         try (DaprClient client = (new DaprClientBuilder()).build()) {
 
             response = client.invokeMethod(SERVICE_APP_ID, SERVICE_METHOD, message, HttpExtension.POST, headers, Message.class).block();
-            LOGGER.info("Response: {}", response);
+            LOGGER.info("response: {}", response);
 
         } catch (Exception e) {
             e.printStackTrace();

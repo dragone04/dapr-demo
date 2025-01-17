@@ -32,7 +32,8 @@ public class MongoService {
         LOGGER.info("tracestate: {}", tracestate);
 
         messageRepository.save(message);
-        LOGGER.info("Message saved: {}", message);
+
+        LOGGER.info("message saved: {}", message);
 
         return ResponseEntity.ok(message);
 

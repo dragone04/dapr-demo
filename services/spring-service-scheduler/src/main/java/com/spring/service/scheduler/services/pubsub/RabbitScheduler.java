@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Objects;
@@ -31,16 +28,19 @@ public class RabbitScheduler {
     private static final String EXTERNAL_HTTP_METHOD = "todos";
 
     @PostMapping(path = "/rabbitScheduler")
-    public ResponseEntity<Message> rabbitScheduler() {
+    public ResponseEntity<Message> rabbitScheduler(
+            @RequestHeader(value = "traceparent", required = false) String traceparent,
+            @RequestHeader(value = "tracestate", required = false) String tracestate
+    ) {
+
+        LOGGER.info("traceparent: {}", traceparent);
+        LOGGER.info("tracestate: {}", tracestate);
 
         ExternalServiceObject response;
         Message springProducerResponse = new Message();
 
         Random random = new Random();
         int randomNumber = random.nextInt(100) + 1;
-
-        String traceparent = "00-" + UUID.randomUUID().toString().replace("-", "") + "-0000000000000000-01";
-        String tracestate = UUID.randomUUID().toString().replace("-", "");
 
         Map<String, String> headers = Map.of(
                 "traceparent", Objects.toString(traceparent, ""),
@@ -49,15 +49,16 @@ public class RabbitScheduler {
 
         try (DaprClient client = (new DaprClientBuilder()).build()) {
 
-            response = client.invokeMethod(EXTERNAL_HTTP_ENDPOINT, EXTERNAL_HTTP_METHOD + "/" + randomNumber, headers, HttpExtension.GET, null, ExternalServiceObject.class).block();
-            LOGGER.info("Response: {}", response);
+            response = client.invokeMethod(EXTERNAL_HTTP_ENDPOINT, EXTERNAL_HTTP_METHOD + "/" + randomNumber, null, HttpExtension.GET, headers, ExternalServiceObject.class).block();
+            LOGGER.info("response: {}", response);
 
             if (response != null) {
                 Message msg = new Message(response.getId(), response.getTitle());
                 springProducerResponse = client.invokeMethod(SERVICE_APP_ID, SERVICE_METHOD, msg, HttpExtension.POST, headers, Message.class).block();
             }
+
         } catch (Exception e) {
-            LOGGER.error("Error serializing message", e);
+            e.printStackTrace();
         }
 
         return ResponseEntity.ok(springProducerResponse);
