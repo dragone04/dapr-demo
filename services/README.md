@@ -181,3 +181,7 @@ curl --location 'http://localhost:3500/v1.0/publish/messagepubsub/messages' \
 ### test service spring-performance-a
 
     minikube service spring-service-producer --namespace=development --url
+
+### run local service
+
+    dapr run --app-id myapp -- java -jar myapp.jar

@@ -1,0 +1,6 @@
+version: 1
+apps:
+  - appDirPath: .
+    appID: spring-service-producer
+    appPort: 9080
+    command: ["java", "-jar", "target/spring-service-producer-0.0.1-SNAPSHOT.jar"]

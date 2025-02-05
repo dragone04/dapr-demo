@@ -24,7 +24,7 @@ public class ConsumerDaprSdk {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerDaprSdk.class);
 
     private static final String PUBSUB_NAME = "messagepubsub";
-    private static final String TOPIC_NAME = "messages";
+    private static final String TOPIC_NAME = "my-topic";
 
     private static final String SERVICE_APP_ID = "spring-service-mongo";
     private static final String SERVICE_METHOD = "save";
@@ -46,11 +46,19 @@ public class ConsumerDaprSdk {
                 LOGGER.info("cloudEvent@traceparent: {}", cloudEvent.getTraceParent());
                 LOGGER.info("cloudEvent@tracestate: {}", cloudEvent.getTraceState());
 
+                LOGGER.info("cloudEvent@data: {}", cloudEvent.getData());
+                LOGGER.info("cloudEvent@topic: {}", cloudEvent.getTopic());
+                LOGGER.info("cloudEvent@topic: {}", cloudEvent.get());
+
+
                 Message response;
                 Map<String, String> headers = Map.of(
                         "traceparent", Objects.toString(traceparent, ""),
                         "tracestate", Objects.toString(tracestate, "")
                 );
+
+
+                /**
 
                 try (DaprClient client = (new DaprClientBuilder()).build()) {
 
@@ -60,6 +68,8 @@ public class ConsumerDaprSdk {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                */
 
             } catch (Exception e) {
                 throw new RuntimeException(e);

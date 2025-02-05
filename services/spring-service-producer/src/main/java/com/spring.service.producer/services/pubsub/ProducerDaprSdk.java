@@ -21,7 +21,7 @@ public class ProducerDaprSdk {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProducerDaprSdk.class);
 
     private static final String PUBSUB_NAME = "messagepubsub";
-    private static final String TOPIC_NAME = "messages";
+    private static final String TOPIC_NAME = "my-topic";
 
     @PostMapping(path = "/produceDaprSdk", consumes = MediaType.ALL_VALUE)
     public ResponseEntity<Message> produceDaprSdk(
@@ -44,8 +44,10 @@ public class ProducerDaprSdk {
             ).block();
 
         } catch (Exception e) {
-            LOGGER.error("Error: {}", e.getMessage());
+            
+            e.printStackTrace();
             throw new RuntimeException(e);
+
         } finally {
             LOGGER.info("Published data: {}", message);
         }

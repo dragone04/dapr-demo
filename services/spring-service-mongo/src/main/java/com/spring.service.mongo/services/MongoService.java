@@ -1,6 +1,5 @@
 package com.spring.service.mongo.services;
 
-import com.spring.service.mongo.model.Message;
 import com.spring.service.mongo.repository.MessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +22,10 @@ public class MongoService {
     }
 
     @PostMapping(path = "/save", consumes = MediaType.ALL_VALUE)
-    public ResponseEntity<Message> save(
+    public ResponseEntity<com.spring.service.mongo.model.Message> save(
             @RequestHeader(value = "traceparent", required = false) String traceparent,
             @RequestHeader(value = "tracestate", required = false) String tracestate,
-            @RequestBody(required = false) Message message
+            @RequestBody(required = false) com.spring.service.mongo.model.Message message
     ) {
         LOGGER.info("traceparent: {}", traceparent);
         LOGGER.info("tracestate: {}", tracestate);
