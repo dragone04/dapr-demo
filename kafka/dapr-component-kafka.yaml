@@ -1,0 +1,31 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: messagepubsub
+spec:
+  type: pubsub.kafka
+  version: v1
+  metadata:
+  - name: brokers # Required. Kafka broker connection setting
+    value: "127.0.0.1:19094,127.0.0.1:19095,127.0.0.1:19096"
+  - name: consumerGroup # Optional. Used for input bindings.
+    value: "{namespace}"
+  - name: consumerID # Optional. If not supplied, runtime will create one.
+    value: "channel1"
+  - name: clientID # Optional. Used as client tracing ID by Kafka brokers.
+    value: "{appID}"
+  - name: authType # Required.
+    value: "none"
+  - name: maxMessageBytes # Optional.
+    value: 1024
+  - name: consumeRetryInterval # Optional.
+    value: 200ms
+  - name: heartbeatInterval # Optional.
+    value: 5s
+  - name: sessionTimeout # Optional.
+    value: 15s
+  - name: disableTls
+    value: "true"
+scopes:
+  - spring-service-producer
+  - spring-service-consumer
